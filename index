@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login com Google - Ted2.0</title>
+</head>
+<body>
+  <h1>Login com Google</h1>
+  <button onclick="login()">Entrar com Google</button>
+
+  <div id="userInfo" style="display:none;">
+    <p id="userName"></p>
+    <button onclick="logout()">Sair</button>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDAVssBZoyRlBPHjf_MqhhgCNZcttfrW8U",
+      authDomain: "inglesmaster-30944.firebaseapp.com",
+      projectId: "inglesmaster-30944",
+      storageBucket: "inglesmaster-30944.appspot.com",
+      messagingSenderId: "547630878931",
+      appId: "1:547630878931:web:53341fca9d77fd84bac426",
+      measurementId: "G-QFDCZ53FEM"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    function login() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithRedirect(provider);
+    }
+
+    function logout() {
+      auth.signOut();
+      document.getElementById('userInfo').style.display = 'none';
+    }
+
+    auth.getRedirectResult().then((result) => {
+      if (result.user) {
+        showUser(result.user);
+        // Redireciona para seu blog, já autenticado
+        window.location.href = "https://SEU-BLOG.blogspot.com/?logado=1";
+      }
+    }).catch((error) => {
+      console.error(error);
+    });
+
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        showUser(user);
+      }
+    });
+
+    function showUser(user) {
+      document.getElementById('userName').innerText = "Olá, " + user.displayName;
+      document.getElementById('userInfo').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
